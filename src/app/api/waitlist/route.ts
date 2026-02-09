@@ -15,15 +15,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get email credentials from environment variables
-    const emailUser = process.env.EMAIL_USER;
-    const emailPassword = process.env.EMAIL_PASSWORD;
-    const recipientEmail = process.env.RECIPIENT_EMAIL || emailUser;
+    // Get email credentials from environment variables (trim in case of whitespace)
+    const emailUser = process.env.EMAIL_USER?.trim() ?? "";
+    const emailPassword = process.env.EMAIL_PASSWORD?.trim() ?? "";
+    const recipientEmail = process.env.RECIPIENT_EMAIL?.trim() || emailUser;
 
     if (!emailUser || !emailPassword) {
-      console.error("Email credentials not configured");
+      const missing = [];
+      if (!emailUser) missing.push("EMAIL_USER");
+      if (!emailPassword) missing.push("EMAIL_PASSWORD");
+      console.error("Email credentials not configured. Missing:", missing.join(", "));
       return NextResponse.json(
-        { error: "Configuration email manquante. Veuillez contacter le support." },
+        {
+          error:
+            "Configuration email manquante. Vérifiez que .env (ou .env.local) contient EMAIL_USER et EMAIL_PASSWORD, puis redémarrez le serveur (pnpm dev).",
+        },
         { status: 500 }
       );
     }
