@@ -1,7 +1,7 @@
 import { ShoppingBag, CreditCard, Clock, Utensils, MapPin, Sparkles, Shield, ArrowRight, MessageCircle } from 'lucide-react';
 
 interface FeatureCardProps {
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  icon: React.ElementType;
   title: string;
   description: string;
 }
