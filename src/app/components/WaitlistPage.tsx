@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Plus, Minus, Loader2 } from "lucide-react";
+import { SuccessPage } from "./SuccessPage";
 
 export function WaitlistPage() {
+  const router = useRouter();
   const [showReferral, setShowReferral] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
@@ -70,6 +73,12 @@ export function WaitlistPage() {
       [e.target.name]: e.target.value
     }));
   };
+
+  if (submitStatus === "success") {
+    return (
+      <SuccessPage onBackToHome={() => router.push("/")} />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -278,16 +287,7 @@ export function WaitlistPage() {
                   </p>
                 </div>
 
-                {/* Success/Error Messages */}
-                {submitStatus === "success" && (
-                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <p className="text-green-800 text-sm">
-                      ✅ Merci ! Vous êtes maintenant sur la liste d&apos;attente KLYPOP. 
-                      Nous vous contacterons bientôt !
-                    </p>
-                  </div>
-                )}
-
+                {/* Error Message */}
                 {submitStatus === "error" && (
                   <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
                     <p className="text-red-800 text-sm">
